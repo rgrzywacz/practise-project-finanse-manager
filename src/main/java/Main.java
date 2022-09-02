@@ -7,15 +7,13 @@ import category.CategoryDao;
 import category.CategoryService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import config.ConnectionManager;
 import eception.ApplicationException;
 import expanse.ExpenseDao;
 import expanse.ExpenseDto;
 import expanse.ExpenseService;
 import expanse.PrintExpenseDto;
 import income.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import summary.SummaryDto;
 import summary.SummaryExtendDtos;
 import summary.SummaryService;
@@ -23,9 +21,7 @@ import summary.SummaryService;
 public class Main {
 
     public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("moneyTracker");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.close();
+        ConnectionManager.getEntityManager();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
