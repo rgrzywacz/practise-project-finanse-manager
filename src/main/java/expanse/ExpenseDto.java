@@ -12,12 +12,9 @@ public class ExpenseDto {
     private String comment;
     private String category;
 
-    private LocalDate expanseAddDate;
-
     public ExpenseDto(BigDecimal amount, String comment, String category) {
         this.amount = amount;
         this.comment = comment;
         this.category = category;
-        this.expanseAddDate = LocalDate.now();
     }
 }

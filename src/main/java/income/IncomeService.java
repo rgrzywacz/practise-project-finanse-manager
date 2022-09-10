@@ -21,7 +21,7 @@ public class IncomeService {
     public void addIncome(IncomeDto incomeDto) throws IllegalArgumentException {
         ValidationMessage validationMessage = validateIncomeDto(incomeDto);
         if(validationMessage.isValidationResult()) {
-            Income income = new Income(incomeDto.getAmount(), incomeDto.getComment(), incomeDto.getIncomeAddDate());
+            Income income = new Income(incomeDto.getAmount(), incomeDto.getComment());
             incomeDao.insert(income);
         } else {
             throw new IllegalArgumentException(validationMessage.getMessage());

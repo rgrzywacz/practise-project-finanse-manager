@@ -25,9 +25,9 @@ public class Income {
     @Column(name = "income_add_date")
     private LocalDate incomeAddDate;
 
-    public Income(BigDecimal amount, String comment, LocalDate incomeAddDate) {
+    public Income(BigDecimal amount, String comment) {
         this.amount = amount;
         this.comment = comment;
-        this.incomeAddDate = incomeAddDate;
+        this.incomeAddDate = LocalDate.now();
     }
 }
