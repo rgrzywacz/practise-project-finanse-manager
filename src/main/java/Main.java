@@ -67,7 +67,11 @@ public class Main {
                     System.out.println("Podaj komentarz opcjonalnie: ");
                     String comment = in.nextLine();
                     ExpenseDto expenseDto = new ExpenseDto(totalCost, comment, category);
-                    expenseService.addExpense(expenseDto);
+                    try {
+                        expenseService.addExpense(expenseDto);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println(e.getMessage());
+                    }
                 }
                 case 2 -> {
                     System.out.println("Podaj kwotę przychodu: ");

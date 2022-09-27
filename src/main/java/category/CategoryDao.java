@@ -15,7 +15,8 @@ public class CategoryDao {
         EntityManager entityManager = ConnectionManager.getEntityManager();
         Category category = null;
         try {
-            category = (Category) entityManager.createQuery("select c from Category c where c.name=?1").setParameter(1, name).getSingleResult();
+            category = (Category) entityManager.createQuery("select c from Category c where c.name=?1")
+                                               .setParameter(1, name).getSingleResult();
         } catch (NoResultException e) {
             logger.log(Level.WARNING, e.getMessage());
         }

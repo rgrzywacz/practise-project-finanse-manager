@@ -3,6 +3,7 @@ package category;
 import java.util.List;
 
 import eception.ApplicationException;
+import validation.ValidationMessage;
 
 public class CategoryService {
     private CategoryDao categoryDao;
@@ -28,7 +29,8 @@ public class CategoryService {
         if (category != null && (category.getExpenses() == null || category.getExpenses().isEmpty())) {
             categoryDao.delete(category);
         } else {
-            throw new ApplicationException("Podana kategoria jest powiązana z wydatkami, usuń wydatki powiązane z kategorią aby usunąć kategorię");
+            ValidationMessage validationMessage = new ValidationMessage(ValidationMessage.CATEGORY_ASSOCIATED_WITH_ENTRIES, true);
+            throw new ApplicationException(validationMessage.getMessage());
         }
     }
 
