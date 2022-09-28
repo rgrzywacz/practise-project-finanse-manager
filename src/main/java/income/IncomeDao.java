@@ -3,6 +3,7 @@ package income;
 import java.util.List;
 
 import config.ConnectionManager;
+import expanse.Expense;
 import jakarta.persistence.EntityManager;
 
 public class IncomeDao {
@@ -20,6 +21,13 @@ public class IncomeDao {
         Income income = entityManager.find(Income.class, id);
         entityManager.close();
         return income;
+    }
+
+    public List<Income> findAllByAccountNumber(Long accountId) {
+        EntityManager entityManager = ConnectionManager.getEntityManager();
+        List incomes = entityManager.createQuery("select i from Income i where i.account.id = ?1").setParameter(1, accountId).getResultList();
+        entityManager.close();
+        return incomes;
     }
 
     public List<Income> findAll() {

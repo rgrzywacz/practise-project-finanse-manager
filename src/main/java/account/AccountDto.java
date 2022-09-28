@@ -1,14 +1,15 @@
-package income;
+package account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PrintIncomeDto {
+public class AccountDto {
+
     private Long id;
-    private String amount;
-    private String comment;
-    private String incomeAddDate;
+
     private String accountNumber;
+
+    private String name;
 }

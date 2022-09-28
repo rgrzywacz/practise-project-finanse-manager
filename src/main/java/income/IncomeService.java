@@ -1,27 +1,30 @@
 package income;
 
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import config.ConnectionManager;
-import jakarta.persistence.EntityManager;
+import account.Account;
+import account.AccountDao;
 import validation.ValidationMessage;
 
 public class IncomeService {
 
-    private IncomeDao incomeDao;
+    private final IncomeDao incomeDao;
 
-    public IncomeService(IncomeDao incomeDao) {
+    private final AccountDao accountDao;
+
+    public IncomeService(IncomeDao incomeDao, AccountDao accountDao) {
         this.incomeDao = incomeDao;
+        this.accountDao = accountDao;
     }
 
     public void addIncome(IncomeDto incomeDto) throws IllegalArgumentException {
         ValidationMessage validationMessage = validateIncomeDto(incomeDto);
+        Account byAccountNumber = accountDao.findByAccountNumber(incomeDto.getAccountNumber());
         if(validationMessage.isValidationResult()) {
-            Income income = new Income(incomeDto.getAmount(), incomeDto.getComment());
+            Income income = new Income(incomeDto.getAmount(), incomeDto.getComment(), byAccountNumber);
             incomeDao.insert(income);
         } else {
             throw new IllegalArgumentException(validationMessage.getMessage());
@@ -38,7 +41,7 @@ public class IncomeService {
     public Set<PrintIncomeDto> getIncomes() {
         List<Income> incomes = incomeDao.findAll();
         return incomes.stream()
-                      .map(income -> new PrintIncomeDto(income.getId(), income.getAmount().toString() + " zł", income.getComment(), income.getIncomeAddDate().toString()))
+                      .map(i -> new PrintIncomeDto(i.getId(), i.getAmount().toString() + " zł", i.getComment(), i.getIncomeAddDate().toString(), i.getAccount().getAccountNumber()))
                       .collect(Collectors.toSet());
     }
 
@@ -50,5 +53,12 @@ public class IncomeService {
             validationMessage.setMessage(ValidationMessage.MISSING_FIELDS);
         }
         return validationMessage;
+    }
+
+    public Set<PrintIncomeDto> getIncomesByAccountId(long accountId) {
+        List<Income> incomes = incomeDao.findAllByAccountNumber(accountId);
+        return incomes.stream()
+                      .map(i -> new PrintIncomeDto(i.getId(), i.getAmount().toString() + " zł", i.getComment(), i.getIncomeAddDate().toString(), i.getAccount().getAccountNumber()))
+                      .collect(Collectors.toSet());
     }
 }

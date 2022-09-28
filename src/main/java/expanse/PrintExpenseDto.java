@@ -12,4 +12,5 @@ public class PrintExpenseDto {
     private String comment;
     private String category;
     private String expanseAddDate;
+    private String accountNumber;
 }

@@ -3,6 +3,7 @@ package expanse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import account.Account;
 import category.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,10 +30,15 @@ public class Expense {
     @Column(name = "expanse_add_date")
     private LocalDate expanseAddDate;
 
-    public Expense(BigDecimal amount, String comment, Category category) {
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    public Expense(BigDecimal amount, String comment, Category category, Account account) {
         this.amount = amount;
         this.comment = comment;
         this.category = category;
         this.expanseAddDate = LocalDate.now();
+        this.account = account;
     }
 }

@@ -12,8 +12,11 @@ public class IncomeDto {
     private BigDecimal amount;
     private String comment;
 
-    public IncomeDto(BigDecimal amount, String comment) {
+    private String accountNumber;
+
+    public IncomeDto(BigDecimal amount, String comment, String accountNumber) {
         this.amount = amount;
         this.comment = comment;
+        this.accountNumber = accountNumber;
     }
 }

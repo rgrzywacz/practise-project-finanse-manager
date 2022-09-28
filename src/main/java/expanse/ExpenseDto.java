@@ -12,9 +12,12 @@ public class ExpenseDto {
     private String comment;
     private String category;
 
-    public ExpenseDto(BigDecimal amount, String comment, String category) {
+    private String accountNumber;
+
+    public ExpenseDto(BigDecimal amount, String comment, String category, String accountNumber) {
         this.amount = amount;
         this.comment = comment;
         this.category = category;
+        this.accountNumber = accountNumber;
     }
 }

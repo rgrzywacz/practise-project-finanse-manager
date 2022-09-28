@@ -3,6 +3,7 @@ package income;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import account.Account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,15 @@ public class Income {
     @Column(name = "income_add_date")
     private LocalDate incomeAddDate;
 
-    public Income(BigDecimal amount, String comment) {
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+
+    public Income(BigDecimal amount, String comment, Account account) {
         this.amount = amount;
         this.comment = comment;
         this.incomeAddDate = LocalDate.now();
+        this. account = account;
     }
 }
