@@ -20,51 +20,45 @@ import summary.SummaryService;
 
 public class Main {
 
+    private static final CategoryDao categoryDao = new CategoryDao();
+    private static final CategoryService categoryService = new CategoryService(categoryDao);
+    private static final ExpenseDao expenseDao = new ExpenseDao();
+    private static final ExpenseService expenseService = new ExpenseService(expenseDao, categoryDao);
+    private static final IncomeDao incomeDao = new IncomeDao();
+    private static final IncomeService incomeService = new IncomeService(incomeDao);
+    private static final SummaryService summaryService = new SummaryService(expenseDao, incomeDao);
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Scanner in = new Scanner(System.in).useLocale(Locale.ROOT);
+
     public static void main(String[] args) {
         ConnectionManager.getEntityManager();
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        CategoryDao categoryDao = new CategoryDao();
-        CategoryService categoryService = new CategoryService(categoryDao);
-
-        ExpenseDao expenseDao = new ExpenseDao();
-        ExpenseService expenseService = new ExpenseService(expenseDao, categoryDao);
-
-        IncomeDao incomeDao = new IncomeDao();
-        IncomeService incomeService = new IncomeService(incomeDao);
-
-        SummaryService summaryService = new SummaryService(expenseDao, incomeDao);
         List<String> categories;
-
-        Scanner in = new Scanner(System.in).useLocale(Locale.ROOT);
-
         while (true) {
-            System.out.println("Podaj operacje do wykonania");
+            System.out.println("Type the operation to execution: ");
 
-            System.out.println("1 - Dodaj wydatek");
-            System.out.println("2 - Dodaj przychód");
-            System.out.println("3 - Usuń wydatek");
-            System.out.println("4 - Usuń przychód");
-            System.out.println("5 - Wyświetl wszystkie wydatki i przychody");
-            System.out.println("6 - Wyświetl wszystkie wydatki");
-            System.out.println("7 - Wyświetl wszystkie przychody");
-            System.out.println("8 - Wyświetl saldo");
-            System.out.println("9 - Wyświetl wszystkie wydatki na podstawie kategorii");
-            System.out.println("10 - Wyświetl wydatki z podanego okresu czasu");
-            System.out.println("11 - Dodaj nową kategorię");
-            System.out.println("12 - Usuń kategorię");
+            System.out.println("1 - Add expense");
+            System.out.println("2 - Add income");
+            System.out.println("3 - Delete expense");
+            System.out.println("4 - Delete income");
+            System.out.println("5 - Display all expenses and incomes"); // Wyświetl wszystkie wydatki i przychody
+            System.out.println("6 - Display all expenses");
+            System.out.println("7 - Display all incomes");
+            System.out.println("8 - Display balance");
+            System.out.println("9 - Display all expenses grouping by category");
+            System.out.println("10 - Display all expenses between dates");
+            System.out.println("11 - Add new category");
+            System.out.println("12 - Delete category");
 
             int result = in.nextInt();
             switch (result) {
                 case 1 -> {
                     categories = categoryService.getAllCategoryNames();
-                    System.out.println("Podaj kwotę wydatku: ");
+                    System.out.println("Type expense amount: ");
                     BigDecimal totalCost = new BigDecimal(String.valueOf(in.nextBigDecimal())).setScale(2, RoundingMode.CEILING);
                     in.nextLine();
-                    System.out.println("Podaj kategorię wydatku: " + categories.toString());
+                    System.out.println("Type expense category: "+ categories.toString());
                     String category = in.nextLine();
-                    System.out.println("Podaj komentarz opcjonalnie: ");
+                    System.out.println("Type comment (optionally): ");
                     String comment = in.nextLine();
                     ExpenseDto expenseDto = new ExpenseDto(totalCost, comment, category);
                     try {
@@ -74,9 +68,9 @@ public class Main {
                     }
                 }
                 case 2 -> {
-                    System.out.println("Podaj kwotę przychodu: ");
+                    System.out.println("Type income amount: ");
                     BigDecimal totalCost = new BigDecimal(String.valueOf(in.nextBigDecimal()));
-                    System.out.println("Podaj komentarz: ");
+                    System.out.println("Type comment (optionally): ");
                     String comment = in.next();
                     IncomeDto incomeDto = new IncomeDto(totalCost, comment);
                     try {
@@ -86,12 +80,12 @@ public class Main {
                     }
                 }
                 case 3 -> {
-                    System.out.println("Podaj id wydatku, który ma zostać usunięty: ");
+                    System.out.println("Type expense id which you want to delete: ");
                     Long expensedToBeDeleted = in.nextLong();
                     expenseService.deleteExpense(expensedToBeDeleted);
                 }
                 case 4 -> {
-                    System.out.println("Podaj id przychodu, który ma zostać usunięty: ");
+                    System.out.println("Type income id which you want to delete: ");
                     Long incomeIdToBeDeleted = in.nextLong();
                     incomeService.deleteIncome(incomeIdToBeDeleted);
                 }
@@ -116,22 +110,22 @@ public class Main {
                     System.out.println(gson.toJson(summaryExtendDtos));
                 }
                 case 10 -> {
-                    System.out.println("Podaj datę początkową i końcową w formacie yyyy-mm-dd");
-                    System.out.println("Data początkowa: ");
+                    System.out.println("Type start and end date in format yyyy-mm-dd");
+                    System.out.println("Start date: ");
                     String startDate = in.next();
-                    System.out.println("Data końcowa: ");
+                    System.out.println("End date: ");
                     String endDate = in.next();
                     Set<PrintExpenseDto> expensesBetweenDate = expenseService.getExpensesBetweenDate(startDate, endDate);
                     System.out.println(gson.toJson(expensesBetweenDate));
                 }
                 case 11 -> {
-                    System.out.println("Podaj nazwę kategorii: ");
+                    System.out.println("Type category name: ");
                     in.nextLine();
                     String categoryName = in.nextLine();
                     categoryService.addCategory(categoryName);
                 }
                 case 12 -> {
-                    System.out.println("Podaj nazwę kategorii: ");
+                    System.out.println("Type category name: ");
                     in.nextLine();
                     String categoryName = in.nextLine();
                     try {
