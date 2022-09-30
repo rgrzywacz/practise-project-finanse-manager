@@ -5,7 +5,7 @@ import java.util.List;
 import config.ConnectionManager;
 import jakarta.persistence.EntityManager;
 
-public class IncomeDao {
+public class IncomeRepository {
 
     public void insert(Income income) {
         EntityManager entityManager = ConnectionManager.getEntityManager();

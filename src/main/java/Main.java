@@ -3,13 +3,13 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.List;
 
-import category.CategoryDao;
+import category.CategoryRepository;
 import category.CategoryService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ConnectionManager;
 import eception.ApplicationException;
-import expanse.ExpenseDao;
+import expanse.ExpenseRepository;
 import expanse.ExpenseDto;
 import expanse.ExpenseService;
 import expanse.PrintExpenseDto;
@@ -20,13 +20,13 @@ import summary.SummaryService;
 
 public class Main {
 
-    private static final CategoryDao categoryDao = new CategoryDao();
-    private static final CategoryService categoryService = new CategoryService(categoryDao);
-    private static final ExpenseDao expenseDao = new ExpenseDao();
-    private static final ExpenseService expenseService = new ExpenseService(expenseDao, categoryDao);
-    private static final IncomeDao incomeDao = new IncomeDao();
-    private static final IncomeService incomeService = new IncomeService(incomeDao);
-    private static final SummaryService summaryService = new SummaryService(expenseDao, incomeDao);
+    private static final CategoryRepository CATEGORY_REPOSITORY = new CategoryRepository();
+    private static final CategoryService categoryService = new CategoryService(CATEGORY_REPOSITORY);
+    private static final ExpenseRepository EXPENSE_REPOSITORY = new ExpenseRepository();
+    private static final ExpenseService expenseService = new ExpenseService(EXPENSE_REPOSITORY, CATEGORY_REPOSITORY);
+    private static final IncomeRepository INCOME_REPOSITORY = new IncomeRepository();
+    private static final IncomeService incomeService = new IncomeService(INCOME_REPOSITORY);
+    private static final SummaryService summaryService = new SummaryService(EXPENSE_REPOSITORY, INCOME_REPOSITORY);
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Scanner in = new Scanner(System.in).useLocale(Locale.ROOT);
 

@@ -7,24 +7,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import category.Category;
-import category.CategoryDao;
+import category.CategoryRepository;
 import validation.ValidationMessage;
 
 public class ExpenseService {
-    private final ExpenseDao expenseDao;
-    private final CategoryDao categoryDao;
+    private final ExpenseRepository expenseRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ExpenseService(ExpenseDao expenseDao, CategoryDao categoryDao) {
-        this.expenseDao = expenseDao;
-        this.categoryDao = categoryDao;
+    public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
+        this.expenseRepository = expenseRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public void addExpense(ExpenseDto expenseDto) throws IllegalArgumentException {
-        Category category = categoryDao.findByName(expenseDto.getCategory());
+        Category category = categoryRepository.findByName(expenseDto.getCategory());
         ValidationMessage validationMessage = validateExpenseDto(expenseDto, category);
         if (validationMessage.isValidationResult()) {
             Expense expense = new Expense(expenseDto.getAmount(), expenseDto.getComment(), category);
-            expenseDao.insert(expense);
+            expenseRepository.insert(expense);
         } else {
             throw new IllegalArgumentException(validationMessage.getMessage());
         }
@@ -37,7 +37,7 @@ public class ExpenseService {
         String[] splitEndDate = endDate.split("-");
         LocalDate endLocalDate = LocalDate.of(Integer.parseInt(splitEndDate[0]), Integer.parseInt(splitEndDate[1]), Integer.parseInt(splitEndDate[2]));
 
-        List<Expense> expenses = expenseDao.findBetweenDates(startLocalDate, endLocalDate);
+        List<Expense> expenses = expenseRepository.findBetweenDates(startLocalDate, endLocalDate);
 
         return expenses.stream()
                        .map(expense -> new PrintExpenseDto(expense.getId(), expense.getAmount().toString() + " zł", expense.getCategory().getName(), expense.getComment(),
@@ -46,7 +46,7 @@ public class ExpenseService {
     }
 
     public Set<PrintExpenseDto> getExpenses() {
-        List<Expense> expenses = expenseDao.findAll();
+        List<Expense> expenses = expenseRepository.findAll();
         return expenses.stream()
                        .map(expense -> new PrintExpenseDto(expense.getId(), expense.getAmount().toString() + " zł", expense.getCategory().getName(), expense.getComment(),
                                                            expense.getExpanseAddDate().toString()))
@@ -55,7 +55,7 @@ public class ExpenseService {
 
     public void deleteExpense(Long expensedToBeDeleted) {
         if (expensedToBeDeleted != null) {
-           expenseDao.deleteById(expensedToBeDeleted);
+           expenseRepository.deleteById(expensedToBeDeleted);
         }
     }
 

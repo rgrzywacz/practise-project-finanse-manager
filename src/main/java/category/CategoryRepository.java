@@ -8,8 +8,8 @@ import config.ConnectionManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
-public class CategoryDao {
-    Logger logger = Logger.getLogger(CategoryDao.class.getName());
+public class CategoryRepository {
+    Logger logger = Logger.getLogger(CategoryRepository.class.getName());
 
     public Category findByName(String name) {
         EntityManager entityManager = ConnectionManager.getEntityManager();
