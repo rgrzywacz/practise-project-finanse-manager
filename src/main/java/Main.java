@@ -3,17 +3,16 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.List;
 
-import account.Account;
-import account.AccountDao;
+import account.AccountRepository;
 import account.AccountDto;
 import account.AccountService;
-import category.CategoryDao;
+import category.CategoryRepository;
 import category.CategoryService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ConnectionManager;
 import eception.ApplicationException;
-import expanse.ExpenseDao;
+import expanse.ExpenseRepository;
 import expanse.ExpenseDto;
 import expanse.ExpenseService;
 import expanse.PrintExpenseDto;
@@ -24,15 +23,15 @@ import summary.SummaryService;
 import validation.ValidationMessage;
 
 public class Main {
-    private static final AccountDao accountDao = new AccountDao();
-    private static final AccountService accountService = new AccountService(accountDao);
-    private static final CategoryDao categoryDao = new CategoryDao();
-    private static final CategoryService categoryService = new CategoryService(categoryDao);
-    private static final ExpenseDao expenseDao = new ExpenseDao();
-    private static final ExpenseService expenseService = new ExpenseService(expenseDao, categoryDao, accountDao);
-    private static final IncomeDao incomeDao = new IncomeDao();
-    private static final IncomeService incomeService = new IncomeService(incomeDao, accountDao);
-    private static final SummaryService summaryService = new SummaryService(expenseDao, incomeDao);
+    private static final AccountRepository ACCOUNT_REPOSITORY = new AccountRepository();
+    private static final AccountService accountService = new AccountService(ACCOUNT_REPOSITORY);
+    private static final CategoryRepository CATEGORY_REPOSITORY = new CategoryRepository();
+    private static final CategoryService categoryService = new CategoryService(CATEGORY_REPOSITORY);
+    private static final ExpenseRepository EXPENSE_REPOSITORY = new ExpenseRepository();
+    private static final ExpenseService expenseService = new ExpenseService(EXPENSE_REPOSITORY, CATEGORY_REPOSITORY, ACCOUNT_REPOSITORY);
+    private static final IncomeRepository INCOME_REPOSITORY = new IncomeRepository();
+    private static final IncomeService incomeService = new IncomeService(INCOME_REPOSITORY, ACCOUNT_REPOSITORY);
+    private static final SummaryService summaryService = new SummaryService(EXPENSE_REPOSITORY, INCOME_REPOSITORY);
     private static final Scanner in = new Scanner(System.in).useLocale(Locale.ROOT);
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

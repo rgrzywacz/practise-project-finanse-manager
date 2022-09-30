@@ -6,28 +6,28 @@ import eception.ApplicationException;
 import validation.ValidationMessage;
 
 public class CategoryService {
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryDao categoryDao) {
-        this.categoryDao = categoryDao;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     public List<String> getAllCategoryNames() {
-        return categoryDao.findAllCategoryNames();
+        return categoryRepository.findAllCategoryNames();
     }
 
     public void addCategory(String categoryName) {
-        Category byName = categoryDao.findByName(categoryName);
+        Category byName = categoryRepository.findByName(categoryName);
         if (byName == null) {
             Category category = new Category(categoryName);
-            categoryDao.insert(category);
+            categoryRepository.insert(category);
         }
     }
 
     public void deleteCategory(String categoryName) throws ApplicationException {
-        Category category = categoryDao.findByName(categoryName);
+        Category category = categoryRepository.findByName(categoryName);
         if (category != null && (category.getExpenses() == null || category.getExpenses().isEmpty())) {
-            categoryDao.delete(category);
+            categoryRepository.delete(category);
         } else {
             ValidationMessage validationMessage = new ValidationMessage(ValidationMessage.CATEGORY_ASSOCIATED_WITH_ENTRIES, true);
             throw new ApplicationException(validationMessage.getMessage());

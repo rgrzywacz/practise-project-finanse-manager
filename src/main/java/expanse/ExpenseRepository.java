@@ -6,7 +6,7 @@ import java.util.List;
 import config.ConnectionManager;
 import jakarta.persistence.EntityManager;
 
-public class ExpenseDao {
+public class ExpenseRepository {
     public void insert(Expense expense) {
         EntityManager entityManager = ConnectionManager.getEntityManager();
         entityManager.getTransaction().begin();

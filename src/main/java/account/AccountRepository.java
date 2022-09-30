@@ -3,10 +3,9 @@ package account;
 import java.util.List;
 
 import config.ConnectionManager;
-import expanse.Expense;
 import jakarta.persistence.EntityManager;
 
-public class AccountDao {
+public class AccountRepository {
 
     public Account findAccount(long id) {
         EntityManager entityManager = ConnectionManager.getEntityManager();

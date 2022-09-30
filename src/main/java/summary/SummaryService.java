@@ -6,25 +6,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import expanse.Expense;
-import expanse.ExpenseDao;
+import expanse.ExpenseRepository;
 import expanse.PrintExpenseDto;
 import income.Income;
-import income.IncomeDao;
+import income.IncomeRepository;
 import income.PrintIncomeDto;
 
 public class SummaryService {
 
-    private ExpenseDao expenseDao;
-    private IncomeDao incomeDao;
+    private ExpenseRepository expenseRepository;
+    private IncomeRepository incomeRepository;
 
-    public SummaryService(ExpenseDao expenseDao, IncomeDao incomeDao) {
-        this.expenseDao = expenseDao;
-        this.incomeDao = incomeDao;
+    public SummaryService(ExpenseRepository expenseRepository, IncomeRepository incomeRepository) {
+        this.expenseRepository = expenseRepository;
+        this.incomeRepository = incomeRepository;
     }
 
     public SummaryDto getSummary(Long accountId) {
-        List<Expense> expenses = expenseDao.findAllByAccountNumber(accountId);
-        List<Income> incomes = incomeDao.findAllByAccountNumber(accountId);
+        List<Expense> expenses = expenseRepository.findAllByAccountNumber(accountId);
+        List<Income> incomes = incomeRepository.findAllByAccountNumber(accountId);
         Set<PrintExpenseDto> expenseDtos = expenses.stream()
                                                    .map(e -> new PrintExpenseDto(e.getId(), e.getAmount().toString() + " zł",e.getComment(), e.getCategory().getName(),
                                                                                  e.getExpanseAddDate().toString(),e.getAccount().getAccountNumber()))
@@ -37,8 +37,8 @@ public class SummaryService {
     }
 
     public String getBalance() {
-        List<Expense> expenses = expenseDao.findAll();
-        List<Income> incomes = incomeDao.findAll();
+        List<Expense> expenses = expenseRepository.findAll();
+        List<Income> incomes = incomeRepository.findAll();
         BigDecimal expensesBalance = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal incomeBalance = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal balance = incomeBalance.subtract(expensesBalance);
@@ -46,7 +46,7 @@ public class SummaryService {
     }
 
     public SummaryExtendDtos summaryExtendDtos() {
-        List<Object[]> expenseGroupByCategoryList = expenseDao.findExpenseSummaryGroupByCategory();
+        List<Object[]> expenseGroupByCategoryList = expenseRepository.findExpenseSummaryGroupByCategory();
         SummaryExtendDtos summaryExtendDtos = new SummaryExtendDtos();
         for (Object[] objects : expenseGroupByCategoryList) {
             BigDecimal totalCost = (BigDecimal) objects[0];
@@ -60,8 +60,8 @@ public class SummaryService {
     }
 
     public String getBalanceForAccount(long accountId) {
-        List<Expense> expenses = expenseDao.findAllByAccountNumber(accountId);
-        List<Income> incomes = incomeDao.findAllByAccountNumber(accountId);
+        List<Expense> expenses = expenseRepository.findAllByAccountNumber(accountId);
+        List<Income> incomes = incomeRepository.findAllByAccountNumber(accountId);
         BigDecimal expensesBalance = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal incomeBalance = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal balance = incomeBalance.subtract(expensesBalance);
@@ -69,7 +69,7 @@ public class SummaryService {
     }
 
     public SummaryExtendDtos summaryExtendDtosForAccount(long accountId) {
-        List<Object[]> expenseGroupByCategoryList = expenseDao.findExpenseSummaryGroupByCategoryAndAccount(accountId);
+        List<Object[]> expenseGroupByCategoryList = expenseRepository.findExpenseSummaryGroupByCategoryAndAccount(accountId);
         SummaryExtendDtos summaryExtendDtos = new SummaryExtendDtos();
         for (Object[] objects : expenseGroupByCategoryList) {
             BigDecimal totalCost = (BigDecimal) objects[0];
