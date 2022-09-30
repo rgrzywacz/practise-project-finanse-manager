@@ -31,6 +31,13 @@ public class Main {
     private static final Scanner in = new Scanner(System.in).useLocale(Locale.ROOT);
 
     public static void main(String[] args) {
+
+
+
+
+
+
+
         ConnectionManager.getEntityManager();
         List<String> categories;
         while (true) {
