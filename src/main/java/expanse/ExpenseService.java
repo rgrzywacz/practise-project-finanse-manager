@@ -48,7 +48,7 @@ public class ExpenseService {
     public Set<PrintExpenseDto> getExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
         return expenses.stream()
-                       .map(expense -> new PrintExpenseDto(expense.getId(), expense.getAmount().toString() + " zł", expense.getCategory().getName(), expense.getComment(),
+                       .map(expense -> new PrintExpenseDto(expense.getId(), expense.getAmount().toString() + " zł",expense.getComment(), expense.getCategory().getName(),
                                                            expense.getExpanseAddDate().toString()))
                        .collect(Collectors.toSet());
     }
